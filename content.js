@@ -1,7 +1,7 @@
 console.log('Content script loaded.');
 
 function changeImageSources(imageData) {
-    // Change profile picture
+    // Change profile picture for all images with profile name in alt attribute
     const nameContainer = document.querySelector('div[aria-label^="Profile "]');
     if (nameContainer) {
         const ariaLabel = nameContainer.getAttribute('aria-label');
@@ -33,22 +33,20 @@ function changeImageSources(imageData) {
     }
 }
 
-function applyImageChangesOnLoad(imageData) {
-    const observer = new MutationObserver((mutations, observer) => {
-        if (document.querySelector('div[aria-label^="Profile "]') || document.querySelector('span.wdappchrome-aaal img')) {
-            changeImageSources(imageData);
-            observer.disconnect(); // Stop observing after the images are updated
-        }
+function observeAndChangeImages(imageData) {
+    const observer = new MutationObserver(() => {
+        changeImageSources(imageData);
     });
+
     observer.observe(document.body, { childList: true, subtree: true });
 
-    // Check if elements are already loaded
+    // Initial image update
     changeImageSources(imageData);
 }
 
 // Apply image changes from chrome.storage.local if it exists
 chrome.storage.local.get('profileImage', (result) => {
     if (result.profileImage) {
-        applyImageChangesOnLoad(result.profileImage);
+        observeAndChangeImages(result.profileImage);
     }
 });
