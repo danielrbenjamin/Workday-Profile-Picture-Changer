@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Workday Profile Picture Changer",
+  "name": "UBC Workday Improvements",
   "version": "1.0",
   "description": "Upload a photo to change your profile picture on Workday.",
   "permissions": ["activeTab", "scripting", "storage"],
